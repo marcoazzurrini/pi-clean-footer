@@ -1,7 +1,7 @@
 /**
  * Clean Footer Extension
  *
- * Replaces the footer with a single line:
+ * Blanks the startup header and replaces the footer with a single line:
  *   LEFT:  permission mode (from @georgedong32/permission-modes, when installed)
  *          + model name (no provider prefix) + thinking level
  *   RIGHT: context usage, color-coded
@@ -14,7 +14,7 @@
  * var is not set. No direct coupling to permission-modes internals.
  *
  * Removes: pwd, git branch, token counts, cost, MCP status, model profile,
- * provider name.
+ * provider name, and the startup header.
  */
 
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
@@ -78,6 +78,10 @@ function modelDisplayName(ctx: ExtensionContext): string {
 
 export default function cleanFooter(pi: ExtensionAPI) {
 	pi.on("session_start", async (_event, ctx) => {
+		// setHeader(undefined) restores Pi's built-in header, so an empty render
+		// is the only way to suppress the header entirely.
+		ctx.ui.setHeader(() => ({ render: () => [] }));
+
 		ctx.ui.setFooter((_tui, theme, _footerData) => {
 			return {
 				dispose() {},

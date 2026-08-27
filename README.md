@@ -1,6 +1,6 @@
 # Pi Clean Footer
 
-A small [Pi coding agent](https://pi.dev) extension that replaces the default footer with a minimal, single-line display.
+A small [Pi coding agent](https://pi.dev) extension that replaces the default footer with a minimal, single-line display and hides the startup header.
 
 ## What it shows
 
@@ -10,6 +10,20 @@ A small [Pi coding agent](https://pi.dev) extension that replaces the default fo
 - The `mcp` status is intentionally hidden.
 
 The extension omits the working directory, Git branch, cumulative token counts, cost, and MCP status. Those values are either available elsewhere in the author's terminal setup or not useful for this workflow.
+
+## Startup header
+
+The extension also blanks the startup header shown above the chat, including the banner that `@companion-ai/feynman` installs. Because Pi keeps a single last-writer-wins header slot and runs `session_start` handlers in package order, this package must be listed **last** in `settings.json#packages`:
+
+```json
+"packages": [
+  "npm:@georgedong32/permission-modes",
+  "npm:@companion-ai/feynman",
+  "git:github.com/marcoazzurrini/pi-clean-footer@main"
+]
+```
+
+Listed earlier, another package's header or footer will override this one.
 
 ## Installation
 

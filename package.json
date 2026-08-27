@@ -1,7 +1,7 @@
 {
   "name": "pi-clean-footer",
-  "version": "0.1.0",
-  "description": "A minimal single-line footer for the Pi coding agent",
+  "version": "0.2.0",
+  "description": "A minimal single-line footer and hidden startup header for the Pi coding agent",
   "type": "module",
   "license": "MIT",
   "repository": {
