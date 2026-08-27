@@ -4,12 +4,10 @@ A small [Pi coding agent](https://pi.dev) extension that replaces the default fo
 
 ## What it shows
 
-- **Left:** context usage as a percentage and the model's context-window size.
-- **Right:** active model, reasoning level when applicable, and statuses published by other extensions.
-- Context usage becomes a warning above 70% and an error above 90%.
-- The `mcp` status is intentionally hidden.
+- **Left:** the active permission mode (when [`@georgedong32/permission-modes`](https://www.npmjs.com/package/@georgedong32/permission-modes) is installed), the model name with its provider prefix stripped, and the reasoning level when the model supports it.
+- **Right:** context usage as `tokensUsed/contextWindow`, with no percentage. It renders green below 150k tokens used and yellow at or above.
 
-The extension omits the working directory, Git branch, cumulative token counts, cost, and MCP status. Those values are either available elsewhere in the author's terminal setup or not useful for this workflow.
+The extension omits the working directory, Git branch, cumulative token counts, cost, model profile, provider prefix, and statuses published by other extensions. Those values are either available elsewhere in the author's terminal setup or not useful for this workflow.
 
 ## Startup header
 
