@@ -15,9 +15,10 @@ This repository contains one Pi coding-agent package: the `clean-footer` extensi
 
 - Keep the footer to one line.
 - Preserve ANSI-aware width calculations with `visibleWidth` and `truncateToWidth`.
-- Keep context usage on the left and model, thinking level, and allowed extension statuses on the right.
-- Keep the `mcp` extension status hidden unless the project requirements explicitly change.
-- Unsubscribe from `footerData.onBranchChange` through the component's `dispose` method.
+- Keep the permission mode, model name, and thinking level on the left, and context usage on the right. Do not render the cwd, model profile, provider prefix, or extension statuses.
+- The extension intentionally supersedes the footer installed by `@georgedong32/permission-modes`; keep it installed after that package in `settings.json#packages` so its `setFooter` call wins.
+- Read the permission mode lazily inside `render()` from the last `modes` custom session entry (`customType: "modes"`) on the current branch — permission-modes appends it on every mode change. Omit the mode segment gracefully when no entry exists.
+- Strip the provider prefix from the model display name (e.g. `Z.ai: GLM 5.3 Flash` renders as `GLM 5.3 Flash`).
 
 ## Packaging and development
 
