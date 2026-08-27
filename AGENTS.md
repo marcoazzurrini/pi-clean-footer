@@ -17,7 +17,7 @@ This repository contains one Pi coding-agent package: the `clean-footer` extensi
 - Preserve ANSI-aware width calculations with `visibleWidth` and `truncateToWidth`.
 - Keep the permission mode, model name, and thinking level on the left, and context usage on the right. Do not render the cwd, model profile, provider prefix, or extension statuses.
 - The extension intentionally supersedes the footer installed by `@georgedong32/permission-modes`; keep it installed after that package in `settings.json#packages` so its `setFooter` call wins.
-- Read the permission mode lazily inside `render()` from the last `modes` custom session entry (`customType: "modes"`) on the current branch — permission-modes appends it on every mode change. Omit the mode segment gracefully when no entry exists.
+- Read the permission mode lazily inside `render()`, preferring the `PERMISSION_MODES_INHERITED_MODE` env var (published by permission-modes at `session_start` and on every mode change — this covers the initial mode before any `modes` session entry exists), with the last `modes` custom session entry (`customType: "modes"`) on the current branch as fallback. Omit the mode segment gracefully when neither source yields a mode.
 - Strip the provider prefix from the model display name (e.g. `Z.ai: GLM 5.3 Flash` renders as `GLM 5.3 Flash`).
 
 ## Packaging and development

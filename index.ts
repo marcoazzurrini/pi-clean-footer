@@ -6,9 +6,12 @@
  *          + model name (no provider prefix) + thinking level
  *   RIGHT: context usage, color-coded
  *
- * The permission mode is read lazily from the `modes` custom session entries
- * that permission-modes appends on every mode change, so the footer picks up
- * shift+tab cycles on the next frame without any direct coupling.
+ * The permission mode is read lazily at render time. The primary source is
+ * the PERMISSION_MODES_INHERITED_MODE env var that permission-modes
+ * publishes at session_start and on every mode change (shift+tab, /mode),
+ * which covers the initial mode before any `modes` session entry exists.
+ * The last `modes` custom session entry is used as a fallback when the env
+ * var is not set. No direct coupling to permission-modes internals.
  *
  * Removes: pwd, git branch, token counts, cost, MCP status, model profile,
  * provider name.
@@ -34,14 +37,23 @@ function formatTokens(count: number): string {
 	return `${(count / 1000000).toFixed(1)}M`;
 }
 
-/** Last persisted permission-modes state on the current branch, if any. */
+/** Current permission-modes mode, if determinable (env var first, session entry fallback). */
 function getPermissionMode(ctx: ExtensionContext): Mode | null {
+	// permission-modes publishes the live mode into process env at every
+	// session_start and on every mode change; it is always fresh in the
+	// interactive parent process where the footer renders.
+	const envMode = process.env["PERMISSION_MODES_INHERITED_MODE"]?.trim();
+	if (envMode && MODE_META[envMode as Mode]) return envMode as Mode;
+
+	// Fallback: last persisted `modes` custom entry on the current branch.
+	// (Not written until the first mode change of a session.)
 	try {
 		const branch = ctx.sessionManager.getBranch();
 		for (let i = branch.length - 1; i >= 0; i--) {
 			const entry = branch[i] as any;
 			if (entry?.type === "custom" && entry?.customType === "modes" && entry?.data?.currentMode) {
-				return entry.data.currentMode as Mode;
+				const mode = entry.data.currentMode as Mode;
+				if (MODE_META[mode]) return mode;
 			}
 		}
 	} catch {
