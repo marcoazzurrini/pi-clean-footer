@@ -7,7 +7,7 @@
  * Removes: pwd, git branch, token counts, cost, MCP status.
  * These are either redundant (tmux shows pwd/branch) or irrelevant (subscription).
  *
- * Also picks up extension statuses (like preset badge) and shows them on the right.
+ * Also picks up extension statuses and shows them on the right.
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
@@ -53,7 +53,7 @@ export default function cleanFooter(pi: ExtensionAPI) {
 						modelDisplay = thinking === "off" ? `${modelName} • thinking off` : `${modelName} • ${thinking}`;
 					}
 
-					// Extension statuses (e.g., preset badge) — sorted, with blocklist
+					// Extension statuses — sorted, with blocklist
 					const BLOCKED_STATUSES = new Set(["mcp"]);
 					const statuses = footerData.getExtensionStatuses();
 					let statusStr = "";
