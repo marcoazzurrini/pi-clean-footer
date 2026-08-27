@@ -98,21 +98,13 @@ export default function cleanFooter(pi: ExtensionAPI) {
 						: modelDisplay;
 					left += theme.fg("dim", modelText);
 
-					// Right: context usage (color-coded)
+					// Right: context usage — tokens used / window total, no percentage;
+					// color-coded by absolute usage: green below 150k, yellow at/above.
 					const contextUsage = ctx.getContextUsage();
+					const tokensUsed = contextUsage?.tokens ?? 0;
 					const contextWindow = contextUsage?.contextWindow ?? ctx.model?.contextWindow ?? 0;
-					const percentValue = contextUsage?.percent ?? 0;
-					const percentStr = contextUsage?.percent !== null ? `${percentValue.toFixed(1)}%` : "?";
-					const contextDisplay = `${formatTokens(contextUsage?.tokens ?? 0)}/${formatTokens(contextWindow)} ${percentStr}`;
-
-					let right: string;
-					if (percentValue > 90) {
-						right = theme.fg("error", contextDisplay);
-					} else if (percentValue > 70) {
-						right = theme.fg("warning", contextDisplay);
-					} else {
-						right = theme.fg("dim", contextDisplay);
-					}
+					const contextDisplay = `${formatTokens(tokensUsed)}/${formatTokens(contextWindow)}`;
+					const right = theme.fg(tokensUsed < 150000 ? "success" : "warning", contextDisplay);
 
 					// Layout: [left] ...padding... [right]
 					const leftWidth = visibleWidth(left);
